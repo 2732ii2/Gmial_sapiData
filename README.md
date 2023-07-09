@@ -6,5 +6,4 @@
 
 
 # Data model or Flow 
-
-<img width="1440" alt="Screenshot 2023-07-09 at 6 05 06 PM" src="https://github.com/2732ii2/Gmial_sapiData/assets/83974207/54dc8bdc-a88a-46f2-8fa6-b191324a7af5">
+<img width="747" alt="Screenshot 2023-07-09 at 6 06 07 PM" src="https://github.com/2732ii2/Gmial_sapiData/assets/83974207/db58f1fe-b31b-408d-87c5-176c6febd2c8">
