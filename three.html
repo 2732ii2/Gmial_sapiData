@@ -1,0 +1,232 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <title>Document</title>
+    <style>
+        body{
+            width: 100%;
+            height: 100vh;
+            color:white;
+            background: rgb(118, 118, 248,.5);
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+        }
+        #table{
+            width: 100%;
+            height: 90%;
+            max-height: 90%;
+            min-height: 90%;
+            overflow-y: scroll;
+            border: 1px solid black;
+        }
+        td,tr{
+            border: 1px solid black;
+            width: 20px;
+            height: 100px;
+            /* min-height: 20%; */
+            text-align: center;
+            font-size: 16px;
+        }
+        h2{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+            /* background: black; */
+        }
+
+        tr:nth-child(even) {
+  background-color: rgba(27, 28, 28, 0.7);
+}
+tr:nth-child(odd) {
+  background-color: rgba(27, 28, 28, 0.3);
+}
+#content{
+    width: 80%;
+    height: 90%;
+    display: flex;
+    flex-direction: column;
+    max-height: 90%;
+    overflow: scroll;
+}
+#slide{
+    display: flex;
+    width: 100%;
+    /* margin-left: 15.5%; */
+    height: 100px;
+    justify-content: space-between;
+    align-items: center;
+}
+/* th:nth-child(odd),td:nth-child(odd) {
+  background-color: rgba(235, 243, 243, 0.4);
+} */
+
+#top{
+    display: flex;
+    width: 80%;
+    height: 70px;
+    margin-bottom: 2%;
+    justify-content: space-between;
+    align-items: center;
+}
+    th{
+            font-size: 20px;
+            max-height: 20px;
+    }
+    #log{
+        width: 150px;
+        height: 40px;
+        background: black;
+        color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 22px;
+        text-decoration: none;
+    }
+    </style>
+</head>
+<body>
+    <div id="top"> <h1>Welcome to your Gmail Dashboard : Unread Gmails </h1>  <a id="log" href="http://localhost:7600/logout">Logout</a> </div>
+    <div id="content">
+        <div id="slide"> <h2>Email Id</h2>   <h2>Thread Id</h2> <h2 style="min-width:60%;">Email Snippet</h2></div>
+            <table id="table">
+            </table>
+
+    </div>
+
+    <script>
+        var auth="ya29.a0AbVbY6Mar_SR-NfX71EyubjJdJz3U4p3-hGoMd6DSR84tq1LC78ys8l4jGfp_PCKpnCCefXXV1fq-6BxN_mL1ARCrq049GFhE5yjCNVuf3_8C6RB_tQlfU4Lmd7D1TTKPM2mjCgSsrWRiCBS_je57BswzWwqq3waCgYKAfQSARISFQFWKvPlmLJdpvTQ2rkmzm19OTlcHw0166";
+        var table=document.querySelector('#table');
+        
+        let config1 = {
+            method: "get",
+            maxBodyLength: Infinity,
+            url: "https://gmail.googleapis.com/gmail/v1/users/me/messages",
+            headers: {
+                Authorization:
+                `Bearer ${auth}`,
+            },
+            };
+            let config2 = {
+            method: "get",
+            maxBodyLength: Infinity,
+            url: "https://gmail.googleapis.com/gmail/v1/users/me/messages/1893131ef8bc227e",
+            headers: {
+                Authorization:
+                `Bearer ${auth}`,
+            },
+            };
+            axios
+      .request(config1)
+      .then((response) => {
+        // console.log((response.data));
+        var arr = response.data.messages;
+        console.log(arr);
+        arr.map((e,i)=>{
+
+            var {id,threadId}=e;
+            config3 = {
+            method: "get",
+            maxBodyLength: Infinity,
+            url: `https://gmail.googleapis.com/gmail/v1/users/me/messages/${id}`,
+            headers: {
+                Authorization:
+                `Bearer ${auth}`,
+            },
+            };
+
+            
+            axios
+            .request(config3)
+            .then(async(response) => {
+                console.log(response.data.labelIds);
+                if(   response.data.labelIds.includes("UNREAD") && response.data.labelIds.includes("INBOX") ){
+                    // console.log(e);
+                    // console.log(e,response.data);
+                    // if (!response.data.payload.body.size){
+                    //     console.log(response.data.payload.parts);
+                    // }
+                    // else{
+                    //     console.log(response.data.payload.body.data);
+                        // var encoded=await response.data.payload.body.data;
+                        // console.log(encoded);
+                        // let buff = new Buffer(encoded, 'base64');
+                        // var decoded=  buff.toString('ascii');
+                        // console.log(decoded);
+                    // }
+
+                    var td1=document.createElement("td");
+                        var td3=document.createElement("td");
+
+                    var td2=document.createElement("td");
+
+                    td3.style.fontSize="20px";
+                    td2.style.fontSize="20px";
+                    td1.style.fontSize="20px";
+
+                    var tr=document.createElement("tr");
+                    // td0.innerText=`${i}`;
+                    console.log(id);
+                    td1.innerText=`${id}`;
+                    td2.innerText=`${threadId}`;
+                    // tr.appendChild(td0);
+                    td3.innerText=`${response.data.snippet}`;
+                    tr.appendChild(td1);
+                    tr.appendChild(td2);
+                    tr.appendChild(td3);
+
+                    table.appendChild(tr);
+
+
+
+                }
+            })
+            .catch((error) => {
+                console.log(error.message);
+                var h1=document.querySelector("h1");
+                h1.innerText=error.message;
+                table.style.display="flex";
+                table.style.justifyContent="center";
+                table.appendChild(h1);
+            });
+        //     var td1=document.createElement("td");
+        //     var td0=document.createElement("td");
+
+        // var td2=document.createElement("td");
+
+        // td0.style.fontSize="20px";
+        // td2.style.fontSize="20px";
+        // td1.style.fontSize="20px";
+
+        // var tr=document.createElement("tr");
+        // var {id,threadId}=e;
+        // td0.innerText=`${i}`;
+        // console.log(id);
+        // td1.innerText=`${id}`;
+        // td2.innerText=`${threadId}`;
+        // tr.appendChild(td0);
+        // tr.appendChild(td1);
+        // tr.appendChild(td2);
+        // table.appendChild(tr);
+        })
+        console.log(arr.length);
+      })
+      .catch((error) => {
+        console.log(error.message);
+                var h1=document.querySelector("h1");
+                h1.innerText=error.message;
+                table.style.display="flex";
+                table.style.justifyContent="center";
+                table.appendChild(h1);
+      });
+
+    </script>
+</body>
+</html>
